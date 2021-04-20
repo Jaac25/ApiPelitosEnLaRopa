@@ -15,6 +15,10 @@ const usuarioSchema = new Schema({
         unique: true,
         required: [true, "Tu número de documento es obligatorio"]
     },
+    rol: {
+        type: String,
+        required: [true, "Es obligatorio el rol del usuario"]
+    },
     telefono: {
         type:String,
         unique: true,
@@ -52,15 +56,16 @@ usuarioSchema.method("compararContrasena", function (password: string = ''): boo
 });
 
 interface IYo extends Document{
-    nombres: String;
-    apellidos: String;
-    documento: String;
-    telefono: String;
-    ciudad: String;
-    direccion: String;
-    correo: String;
-    foto: String;
-    password: String;
+    nombres: string;
+    apellidos: string;
+    documento: string;
+    rol: string;
+    telefono: string;
+    ciudad: string;
+    direccion: string;
+    correo: string;
+    foto: string;
+    password: string;
     compararContrasena(password:String): boolean;
 }
 

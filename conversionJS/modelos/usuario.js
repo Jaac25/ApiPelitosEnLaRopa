@@ -20,6 +20,10 @@ var usuarioSchema = new mongoose_1.Schema({
         unique: true,
         required: [true, "Tu número de documento es obligatorio"]
     },
+    rol: {
+        type: String,
+        required: [true, "Es obligatorio el rol del usuario"]
+    },
     telefono: {
         type: String,
         unique: true,

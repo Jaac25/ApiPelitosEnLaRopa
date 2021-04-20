@@ -15,6 +15,7 @@ usuarioRutas.post('/crear', function (req, res) {
         nombres: req.body.nombres,
         apellidos: req.body.apellidos,
         documento: req.body.documento,
+        rol: req.body.rol,
         telefono: req.body.telefono,
         ciudad: req.body.ciudad,
         direccion: req.body.direccion,
