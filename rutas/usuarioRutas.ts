@@ -61,8 +61,9 @@ usuarioRutas.post('/entrar',(req: Request,res: Response)=>{
                 correo: usuarioDB.correo,
                 password: usuarioDB.password
             });
+            console.log(miToken);
             res.json({
-                ok:true,
+                ok: true,
                 token: miToken
             });
         }else{
