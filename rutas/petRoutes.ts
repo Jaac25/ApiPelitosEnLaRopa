@@ -14,9 +14,9 @@ petRouter.post('/crear',(req: Request,res: Response)=>{
         traits: req.body.traits,
         picture: picture.filename,
     };
-    
+    console.log(picture);
 //Grabar PET en BD
-    Pet.create(pet).then(petBD => {
+    /*Pet.create(pet).then(petBD => {
         res.json({
             ok: true,
             pet:petBD
@@ -26,7 +26,7 @@ petRouter.post('/crear',(req: Request,res: Response)=>{
             ok: false,
             err
         })
-    })
+    })*/
 });
 
 //Ver pets
