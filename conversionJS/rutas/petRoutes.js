@@ -13,19 +13,19 @@ petRouter.post('/crear', function (req, res) {
         traits: req.body.traits,
         picture: picture.filename,
     };
-    console.log(picture);
+    //console.log(picture);
     //Grabar PET en BD
-    /*Pet.create(pet).then(petBD => {
+    pet_1.Pet.create(pet).then(function (petBD) {
         res.json({
             ok: true,
-            pet:petBD
-        })
-    }).catch(err => {
+            pet: petBD
+        });
+    }).catch(function (err) {
         res.json({
             ok: false,
-            err
-        })
-    })*/
+            err: err
+        });
+    });
 });
 //Ver pets
 petRouter.get('/todos', function (req, res) {
