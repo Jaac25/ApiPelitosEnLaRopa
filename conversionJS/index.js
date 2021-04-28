@@ -21,7 +21,7 @@ server.app.use(body_parser_1.default.json());
 server.app.use(express_1.default.json());
 server.app.use(express_1.default.urlencoded({ extended: false }));
 var storage = multer_1.default.diskStorage({
-    destination: 'public/uploads',
+    destination: 'conversionJS/public/uploads',
     filename: function (req, file, cb) {
         cb(null, (new Date().getTime()) + path_1.default.extname(file.originalname));
     }
@@ -33,7 +33,10 @@ server.app.use((cors_1.default({ origin: true, credentials: true })));
 server.app.use('/usuario', usuarioRutas_1.default);
 server.app.use('/pet', petRoutes_1.default);
 //Public
-server.app.use(express_1.default.static(__dirname + '/public'));
+server.app.use('/', express_1.default.static(path_1.default.join(__dirname, 'public'))).get('/image/:nameImage', function (req, res) {
+    var nameImage = req.params.nameImage;
+    res.sendFile(path_1.default.join(__dirname, "public/uploads/" + nameImage));
+});
 //Conectar BD
 mongoose_1.default.connect(config.MONGO, {
     useNewUrlParser: true,

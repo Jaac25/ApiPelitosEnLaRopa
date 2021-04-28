@@ -19,7 +19,7 @@ server.app.use(bodyParser.json());
 server.app.use(express.json());
 server.app.use(express.urlencoded({extended:false}));
 const storage = multer.diskStorage({
-    destination: 'public/uploads',
+    destination: 'conversionJS/public/uploads',
     filename: (req,file,cb) => {
         cb(null, (new Date().getTime()) + path.extname(file.originalname));
     }
@@ -33,7 +33,10 @@ server.app.use((cors({ origin: true, credentials: true })));
 server.app.use('/usuario',usuarioRutas);
 server.app.use('/pet',petRouter);
     //Public
-        server.app.use(express.static(__dirname+'/public'));
+        server.app.use('/',express.static(path.join(__dirname,'public'))).get('/image/:nameImage', function(req,res){
+            let nameImage : string = req.params.nameImage;
+            res.sendFile(path.join(__dirname,`public/uploads/${nameImage}`));
+        },);
 
 //Conectar BD
 mongoose.connect(

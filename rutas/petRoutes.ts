@@ -12,7 +12,7 @@ petRouter.post('/crear',(req: Request,res: Response)=>{
         race: req.body.race,
         gender: req.body.gender,
         traits: req.body.traits,
-        picture: picture.path,
+        picture: picture.filename,
     };
     
 //Grabar PET en BD

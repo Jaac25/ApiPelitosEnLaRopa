@@ -11,7 +11,7 @@ petRouter.post('/crear', function (req, res) {
         race: req.body.race,
         gender: req.body.gender,
         traits: req.body.traits,
-        picture: picture.path,
+        picture: picture.filename,
     };
     //Grabar PET en BD
     pet_1.Pet.create(pet).then(function (petBD) {
