@@ -1,6 +1,6 @@
 import {Schema, model, Document} from 'mongoose';
 
-const petsSchema = new Schema({
+const petsSchema = new Schema<IPet>({
     name: {
         type:String,
         required: [true, 'El nombre de la mascota es obligatorio']
@@ -16,17 +16,27 @@ const petsSchema = new Schema({
     traits: {
         type: String,
     },
+    lost: {
+        type: Boolean,
+        required: [true, "Es obligatorio saber si está perdidoo no"],
+    },
+    adopt: {
+        type: Boolean,
+        required: [true, "Es obligatorio saber si está en adopción o no"],
+    },
     picture: {
         type: String,
     },
 });
 
-interface IYo extends Document{
+interface IPet extends Document{
     name: string;
     race: string;
     gender: string;
     traits: string;
+    lost: boolean;
+    adopt: boolean;
     picture: string;
 }
 
-export const Pet = model<IYo>('Pet',petsSchema);
+export const Pet = model<IPet>('Pet',petsSchema);

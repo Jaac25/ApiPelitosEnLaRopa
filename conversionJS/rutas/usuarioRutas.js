@@ -11,17 +11,25 @@ var autentificacion_1 = require("../middelwares/autentificacion");
 var usuarioRutas = express_1.Router();
 //Crear Usuario
 usuarioRutas.post('/crear', function (req, res) {
+    var nombresReq = req.body.nombres;
+    var apellidosReq = req.body.apellidos;
+    var documentoReq = req.body.documento;
+    var rolReq = req.body.rol;
+    var telefonoReq = req.body.telefono;
+    var ciudadReq = req.body.ciudad;
+    var direccionReq = req.body.direccion;
+    var correoReq = req.body.correo;
+    var passwordReq = req.body.password;
     var usuario = {
-        nombres: req.body.nombres,
-        apellidos: req.body.apellidos,
-        documento: req.body.documento,
-        rol: req.body.rol,
-        telefono: req.body.telefono,
-        ciudad: req.body.ciudad,
-        direccion: req.body.direccion,
-        correo: req.body.correo,
-        foto: req.body.foto,
-        password: bcryptjs_1.default.hashSync(req.body.password, 10)
+        nombres: nombresReq,
+        apellidos: apellidosReq,
+        documento: documentoReq,
+        rol: rolReq,
+        telefono: telefonoReq,
+        ciudad: ciudadReq,
+        direccion: direccionReq,
+        correo: correoReq,
+        password: bcryptjs_1.default.hashSync(passwordReq, 10)
     };
     //Grabar USUARIO en BD
     usuario_1.Usuario.create(usuario).then(function (usuarioDB) {
@@ -78,16 +86,25 @@ usuarioRutas.post('/entrar', function (req, res) {
 });
 //Actualizar Token
 usuarioRutas.post('/actualizar', autentificacion_1.verificarToken, function (req, res) {
+    var nombresReq = req.body.nombres || req.usuario.nombres;
+    var apellidosReq = req.body.apellidos || req.usuario.apellidos;
+    var documentoReq = req.body.documento || req.usuario.documento;
+    var rolReq = req.body.rol || req.usuario.rol;
+    var telefonoReq = req.body.telefono || req.usuario.telefono;
+    var ciudadReq = req.body.ciudad || req.usuario.ciudad;
+    var direccionReq = req.body.direccion || req.usuario.direccion;
+    var correoReq = req.body.correo || req.usuario.correo;
+    var passwordReq = req.body.password || req.usuario.password;
     var usuario = {
-        nombres: req.body.nombres || req.usuario.nombres,
-        apellidos: req.body.apellidos || req.usuario.apellidos,
-        documento: req.body.documento || req.usuario.documento,
-        telefono: req.body.telefono || req.usuario.telefono,
-        ciudad: req.body.ciudad || req.usuario.ciudad,
-        direccion: req.body.direccion || req.usuario.direccion,
-        correo: req.body.correo || req.usuario.correo,
-        foto: req.body.foto || req.usuario.foto,
-        password: bcryptjs_1.default.hashSync(req.body.password, 10) || bcryptjs_1.default.hashSync(req.usuario.password, 10)
+        nombres: nombresReq,
+        apellidos: apellidosReq,
+        documento: documentoReq,
+        rol: rolReq,
+        telefono: telefonoReq,
+        ciudad: ciudadReq,
+        direccion: direccionReq,
+        correo: correoReq,
+        password: bcryptjs_1.default.hashSync(passwordReq, 10)
     };
     usuario_1.Usuario.findByIdAndUpdate(req.usuario._id, usuario, { new: true }, function (err, userDB) {
         if (err)
@@ -113,26 +130,6 @@ usuarioRutas.post('/actualizar', autentificacion_1.verificarToken, function (req
 usuarioRutas.get('/mostrar', autentificacion_1.verificarToken, function (req, res) {
     var documento = req.usuario._id;
     usuario_1.Usuario.findOne({ _id: documento }, function (err, usuarioDB) {
-        if (err)
-            throw err;
-        if (!usuarioDB) {
-            return res.json({
-                ok: false,
-                mensaje: 'No se ha encontrado el usuario'
-            });
-        }
-        else {
-            return res.json({
-                "ok": true,
-                "usuario": usuarioDB
-            });
-        }
-    });
-});
-//Metodos buscar 
-usuarioRutas.post('/bCorreo', function (req, res) {
-    var correo = req.body.correo;
-    usuario_1.Usuario.findOne({ correo: correo }, function (err, usuarioDB) {
         if (err)
             throw err;
         if (!usuarioDB) {

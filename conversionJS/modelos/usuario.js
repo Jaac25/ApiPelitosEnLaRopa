@@ -6,7 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Usuario = void 0;
 var mongoose_1 = require("mongoose");
 var bcryptjs_1 = __importDefault(require("bcryptjs"));
-var usuarioSchema = new mongoose_1.Schema({
+var mongoose_2 = __importDefault(require("mongoose"));
+var usuarioSchema = new mongoose_2.default.Schema({
     nombres: {
         type: String,
         required: [true, 'Tu nombre es obligatorio']
@@ -42,9 +43,6 @@ var usuarioSchema = new mongoose_1.Schema({
         unique: true,
         lowercase: true,
         required: [true, "Tu correo es obligatorio"]
-    },
-    foto: {
-        type: String,
     },
     password: {
         type: String,

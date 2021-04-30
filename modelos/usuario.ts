@@ -1,7 +1,9 @@
 import {Schema, model, Document} from 'mongoose';
 import bcrypt from 'bcryptjs';
 
-const usuarioSchema = new Schema({
+import mongoose from 'mongoose';
+
+const usuarioSchema = new mongoose.Schema<IUser>({
     nombres: {
         type:String,
         required: [true, 'Tu nombre es obligatorio']
@@ -38,16 +40,13 @@ const usuarioSchema = new Schema({
         lowercase: true,
         required: [true, "Tu correo es obligatorio"]
     },
-    foto: {
-        type:String,
-    },
     password: {
         type:String,
         required: [true, "Tu contraseña es obligatoria"]
     },
 });
 
-usuarioSchema.method("compararContrasena", function (password: string = ''): boolean{
+usuarioSchema.method("compararContrasena", function(password: string = ''): boolean{
     if(bcrypt.compareSync(password,this.password)){
         return true;
     }else{
@@ -55,7 +54,7 @@ usuarioSchema.method("compararContrasena", function (password: string = ''): boo
     }
 });
 
-interface IYo extends Document{
+interface IUser extends Document{
     nombres: string;
     apellidos: string;
     documento: string;
@@ -64,9 +63,8 @@ interface IYo extends Document{
     ciudad: string;
     direccion: string;
     correo: string;
-    foto: string;
     password: string;
     compararContrasena(password:String): boolean;
 }
 
-export const Usuario = model<IYo>('Usuario',usuarioSchema);
+export const Usuario = model<IUser>('Usuario',usuarioSchema);

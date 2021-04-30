@@ -18,6 +18,14 @@ var petsSchema = new mongoose_1.Schema({
     traits: {
         type: String,
     },
+    lost: {
+        type: Boolean,
+        required: [true, "Es obligatorio saber si está perdidoo no"],
+    },
+    adopt: {
+        type: Boolean,
+        required: [true, "Es obligatorio saber si está en adopción o no"],
+    },
     picture: {
         type: String,
     },

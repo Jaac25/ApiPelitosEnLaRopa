@@ -9,26 +9,35 @@ const usuarioRutas = Router();
 
 //Crear Usuario
 usuarioRutas.post('/crear',(req: Request,res: Response)=>{
+    const nombresReq: string = req.body.nombres;
+    const apellidosReq: string = req.body.apellidos;
+    const documentoReq: string = req.body.documento;
+    const rolReq: string = req.body.rol;
+    const telefonoReq : string = req.body.telefono;
+    const ciudadReq : string = req.body.ciudad;
+    const direccionReq : string = req.body.direccion;
+    const correoReq : string = req.body.correo;
+    const passwordReq : string = req.body.password;
+
     const usuario = {
-        nombres: req.body.nombres,
-        apellidos: req.body.apellidos,
-        documento: req.body.documento,
-        rol: req.body.rol,
-        telefono: req.body.telefono,
-        ciudad: req.body.ciudad,
-        direccion: req.body.direccion,
-        correo: req.body.correo,
-        foto: req.body.foto,
-        password: bcrypt.hashSync(req.body.password,10)
+        nombres: nombresReq,
+        apellidos: apellidosReq,
+        documento: documentoReq,
+        rol: rolReq,
+        telefono: telefonoReq,
+        ciudad: ciudadReq,
+        direccion: direccionReq,
+        correo: correoReq,
+        password: bcrypt.hashSync(passwordReq,10)
     };
     
 //Grabar USUARIO en BD
-    Usuario.create(usuario).then(usuarioDB => {
+    Usuario.create(usuario).then((usuarioDB: any) => {
         res.json({
             ok: true,
             usuario:usuarioDB
         })
-    }).catch(err => {
+    }).catch((err: any) => {
         res.json({
             ok: false,
             err
@@ -37,9 +46,9 @@ usuarioRutas.post('/crear',(req: Request,res: Response)=>{
 });
 //Ver usuarios
 usuarioRutas.get('/todos',(req: Request,res: Response)=>{
-    Usuario.find({specialty: req.query.type}).then(function(usuario) {
+    Usuario.find({specialty: req.query.type}).then(function(usuario:any) {
         res.json(usuario);
-    }).catch(function(error){
+    }).catch(function(error:any){
         console.log("Error al mostrar los usuarios" + error);
     });
 });
@@ -47,7 +56,7 @@ usuarioRutas.get('/todos',(req: Request,res: Response)=>{
 //Login
 usuarioRutas.post('/entrar',(req: Request,res: Response)=>{
     const body = req.body;
-    Usuario.findOne({correo: body.correo},(err,usuarioDB) => {
+    Usuario.findOne({correo: body.correo},(err:any,usuarioDB:any) => {
         if(err) throw err;
         if(!usuarioDB){
             return res.json({
@@ -77,16 +86,25 @@ usuarioRutas.post('/entrar',(req: Request,res: Response)=>{
 
 //Actualizar Token
 usuarioRutas.post('/actualizar', verificarToken, (req: any, res: Response) => {
+    const nombresReq: string = req.body.nombres || req.usuario.nombres;
+    const apellidosReq: string = req.body.apellidos || req.usuario.apellidos;
+    const documentoReq: string = req.body.documento || req.usuario.documento;
+    const rolReq: string = req.body.rol || req.usuario.rol;
+    const telefonoReq : string = req.body.telefono || req.usuario.telefono;
+    const ciudadReq : string = req.body.ciudad || req.usuario.ciudad;
+    const direccionReq : string = req.body.direccion || req.usuario.direccion;
+    const correoReq : string = req.body.correo || req.usuario.correo;
+    const passwordReq : string = req.body.password || req.usuario.password;
     const usuario = {
-        nombres: req.body.nombres || req.usuario.nombres,
-        apellidos: req.body.apellidos || req.usuario.apellidos,
-        documento: req.body.documento || req.usuario.documento,
-        telefono: req.body.telefono || req.usuario.telefono,
-        ciudad: req.body.ciudad || req.usuario.ciudad,
-        direccion: req.body.direccion || req.usuario.direccion,
-        correo: req.body.correo || req.usuario.correo,
-        foto: req.body.foto || req.usuario.foto,
-        password: bcrypt.hashSync(req.body.password,10) || bcrypt.hashSync(req.usuario.password,10)
+        nombres: nombresReq,
+        apellidos: apellidosReq,
+        documento: documentoReq,
+        rol: rolReq,
+        telefono: telefonoReq,
+        ciudad: ciudadReq,
+        direccion: direccionReq,
+        correo: correoReq,
+        password: bcrypt.hashSync(passwordReq,10)
     }
     Usuario.findByIdAndUpdate(req.usuario._id, usuario, { new: true }, (err, userDB) => {
         if (err) throw err;
@@ -111,26 +129,7 @@ usuarioRutas.post('/actualizar', verificarToken, (req: any, res: Response) => {
 //Obtener usuario
 usuarioRutas.get('/mostrar', verificarToken, (req: any, res: Response) => {
     var documento = req.usuario._id;
-    Usuario.findOne({_id: documento},(err,usuarioDB) => {
-        if(err) throw err;
-        if(!usuarioDB){
-            return res.json({
-                ok: false,
-                mensaje: 'No se ha encontrado el usuario'
-            });
-        }else{
-            return res.json({
-                "ok": true,
-                "usuario": usuarioDB
-            });
-        }
-    });
-});
-
-//Metodos buscar 
-usuarioRutas.post('/bCorreo', (req: any, res: Response) => {
-    var correo = req.body.correo;
-    Usuario.findOne({correo: correo},(err,usuarioDB) => {
+    Usuario.findOne({_id: documento},(err: any,usuarioDB: any) => {
         if(err) throw err;
         if(!usuarioDB){
             return res.json({

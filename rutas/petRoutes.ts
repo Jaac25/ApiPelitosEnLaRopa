@@ -6,22 +6,31 @@ const petRouter = Router();
 
 //Crear Pet
 petRouter.post('/crear',(req: Request,res: Response)=>{
+    const nameReq: string = req.body.name;
+    const raceReq: string = req.body.race;
+    const genderReq: string = req.body.gender;
+    const traitReq: string = req.body.traits;
+    const lostReq: boolean = req.body.lost;
+    const adoptReq: boolean = req.body.adopt;
+
     const picture = req.file;
     const pet = {
-        name: req.body.name,
-        race: req.body.race,
-        gender: req.body.gender,
-        traits: req.body.traits,
+        name: nameReq,
+        race: raceReq,
+        gender: genderReq,
+        traits: traitReq,
+        lost: lostReq,
+        adopt: adoptReq,
         picture: picture.filename,
     };
     //console.log(picture);
 //Grabar PET en BD
-    Pet.create(pet).then(petBD => {
+    Pet.create(pet).then((petBD: any) => {
         res.json({
             ok: true,
             pet:petBD
         })
-    }).catch(err => {
+    }).catch((err: any) => {
         res.json({
             ok: false,
             err
@@ -29,11 +38,33 @@ petRouter.post('/crear',(req: Request,res: Response)=>{
     })
 });
 
+petRouter.delete('/eliminar',(req:Request,res:Response) => {
+    var idPet:string = req.body.idPet;
+    Pet.deleteOne({_id: idPet}).then((petDB: any) => {
+        if(petDB["deletedCount"] == 0){
+            res.json({
+                ok: false,
+                msg: "No se pudo borrar la mascota"
+            })
+        }else{
+            res.json({
+                ok: true,
+                pet:petDB
+            })
+        }
+    }).catch((err: any) => {
+        res.json({
+            ok: false,
+            msg: "No se pudo borrar la mascota"
+        })
+    })
+});
+
 //Ver pets
 petRouter.get('/todos',(req: Request,res: Response)=>{
-    Pet.find({specialty: req.query.type}).then(function(pet) {
+    Pet.find({specialty: req.query.type}).then(function(pet: any) {
         res.json(pet);
-    }).catch(function(error){
+    }).catch(function(error: string){
         console.log("Error al mostrar las mascotas" + error);
     });
 });
