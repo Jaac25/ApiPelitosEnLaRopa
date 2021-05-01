@@ -22,7 +22,10 @@ petRouter.post('/crear',(req: Request,res: Response)=>{
         traits: traitReq,
         lost: lostReq,
         adopt: adoptReq,
-        picture: picture.filename,
+        picture: {
+            name: picture.filename,
+            path: picture.path,
+        },
     };
     //console.log(picture);
 //Grabar PET en BD
@@ -48,7 +51,7 @@ petRouter.delete('/eliminar', (req:Request,res:Response) => {
                 msg: "No se encontró la mascota"
             })
         }else{
-            await fs.unlink("./..conversionJS/public/uploads/"+petDB["picture"]);
+            await fs.unlink(petDB.picture.path);
             res.json({
                 ok: true,
                 pet:petDB

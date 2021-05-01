@@ -25,7 +25,8 @@ const petsSchema = new Schema<IPet>({
         required: [true, "Es obligatorio saber si está en adopción o no"],
     },
     picture: {
-        type: String,
+        name: String,
+        path: String,
     },
 });
 
@@ -36,7 +37,7 @@ interface IPet extends Document{
     traits: string;
     lost: boolean;
     adopt: boolean;
-    picture: string;
+    picture: {};
 }
 
 export const Pet = model<IPet>('Pet',petsSchema);

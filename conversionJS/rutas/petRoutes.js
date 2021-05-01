@@ -56,7 +56,10 @@ petRouter.post('/crear', function (req, res) {
         traits: traitReq,
         lost: lostReq,
         adopt: adoptReq,
-        picture: picture.filename,
+        picture: {
+            name: picture.filename,
+            path: picture.path,
+        },
     };
     //console.log(picture);
     //Grabar PET en BD
@@ -84,7 +87,7 @@ petRouter.delete('/eliminar', function (req, res) {
                         msg: "No se encontró la mascota"
                     });
                     return [3 /*break*/, 3];
-                case 1: return [4 /*yield*/, fs.unlink("./..conversionJS/public/uploads/" + petDB["picture"])];
+                case 1: return [4 /*yield*/, fs.unlink(petDB.picture.path)];
                 case 2:
                     _a.sent();
                     res.json({

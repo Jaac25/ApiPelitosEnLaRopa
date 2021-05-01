@@ -27,7 +27,8 @@ var petsSchema = new mongoose_1.Schema({
         required: [true, "Es obligatorio saber si está en adopción o no"],
     },
     picture: {
-        type: String,
+        name: String,
+        path: String,
     },
 });
 exports.Pet = mongoose_1.model('Pet', petsSchema);
