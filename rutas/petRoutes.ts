@@ -3,6 +3,7 @@ import { Router, Request, Response} from "express";
 import { Pet } from "../modelos/pet";
 
 const petRouter = Router();
+const fs = require('fs-extra');
 
 //Crear Pet
 petRouter.post('/crear',(req: Request,res: Response)=>{
@@ -38,15 +39,16 @@ petRouter.post('/crear',(req: Request,res: Response)=>{
     })
 });
 
-petRouter.delete('/eliminar',(req:Request,res:Response) => {
+petRouter.delete('/eliminar', (req:Request,res:Response) => {
     var idPet:string = req.body.idPet;
-    Pet.deleteOne({_id: idPet}).then((petDB: any) => {
-        if(petDB["deletedCount"] == 0){
+    Pet.findOneAndDelete({_id: idPet}).then(async (petDB: any) => {
+        if(!petDB){
             res.json({
                 ok: false,
-                msg: "No se pudo borrar la mascota"
+                msg: "No se encontró la mascota"
             })
         }else{
+            await fs.unlink("./..conversionJS/public/uploads/"+petDB["picture"]);
             res.json({
                 ok: true,
                 pet:petDB
