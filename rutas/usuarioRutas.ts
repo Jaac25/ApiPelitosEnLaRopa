@@ -70,7 +70,6 @@ usuarioRutas.post('/entrar',(req: Request,res: Response)=>{
                 correo: usuarioDB.correo,
                 password: usuarioDB.password
             });
-            console.log(miToken);
             res.json({
                 ok: true,
                 token: miToken
@@ -107,7 +106,12 @@ usuarioRutas.post('/actualizar', verificarToken, (req: any, res: Response) => {
         password: bcrypt.hashSync(passwordReq,10)
     }
     Usuario.findByIdAndUpdate(req.usuario._id, usuario, { new: true }, (err, userDB) => {
-        if (err) throw err;
+        if (err) {
+            return res.json({
+                ok: false,
+                mensaje: 'Datos inválidos'
+            });
+        }
         if (!userDB) {
             return res.json({
                 ok: false,
