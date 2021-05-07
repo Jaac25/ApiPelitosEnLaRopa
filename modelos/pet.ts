@@ -5,7 +5,7 @@ const petsSchema = new Schema<IPet>({
         type:String,
         required: [true, 'El nombre de la mascota es obligatorio']
     },
-    race: {
+    type: {
         type:String,
         required: [true, "El tipo de mascota es obligatorio"]
     },
@@ -24,6 +24,10 @@ const petsSchema = new Schema<IPet>({
         type: Boolean,
         required: [true, "Es obligatorio saber si está en adopción o no"],
     },
+    age: {
+        type: Number,
+        required: [true, "Es obligatoria la edad"],
+    },
     picture: {
         name: String,
         path: String,
@@ -32,11 +36,12 @@ const petsSchema = new Schema<IPet>({
 
 interface IPet extends Document{
     name: string;
-    race: string;
+    type: string;
     gender: string;
     traits: string;
     lost: boolean;
     adopt: boolean;
+    age: number;
     picture: {};
 }
 

@@ -2,17 +2,20 @@ import { Router, Request, Response} from "express";
 
 import { Pet } from "../modelos/pet";
 
+import { verificarToken } from "../middelwares/autentificacion"; 
+
 const petRouter = Router();
 const fs = require('fs-extra');
 
 //Crear Pet
-petRouter.post('/crear',(req: Request,res: Response)=>{
+petRouter.post('/crear',verificarToken,(req: Request,res: Response)=>{
     const nameReq: string = req.body.name;
     const raceReq: string = req.body.race;
     const genderReq: string = req.body.gender;
     const traitReq: string = req.body.traits;
     const lostReq: boolean = req.body.lost;
     const adoptReq: boolean = req.body.adopt;
+    const ageReq: number = req.body.age;
 
     const picture = req.file;
     const pet = {
@@ -22,6 +25,7 @@ petRouter.post('/crear',(req: Request,res: Response)=>{
         traits: traitReq,
         lost: lostReq,
         adopt: adoptReq,
+        age: ageReq,
         picture: {
             name: picture.filename,
             path: picture.path,
@@ -42,16 +46,16 @@ petRouter.post('/crear',(req: Request,res: Response)=>{
     })
 });
 
-petRouter.delete('/eliminar', (req:Request,res:Response) => {
-    var idPet:string = req.body.idPet;
-    Pet.findOneAndDelete({_id: idPet}).then(async (petDB: any) => {
+petRouter.delete('/eliminar',verificarToken, (req:Request,res:Response) => {
+    let idPet:string = req.params.idPet;
+    Pet.findOneAndDelete({_id: idPet}).then(async (petDB:any) => {
         if(!petDB){
             res.json({
                 ok: false,
                 msg: "No se encontró la mascota"
             })
         }else{
-            await fs.unlink(petDB.picture.path);
+            //const result= await cloudinary.v2.uploader.destroy(plantulaDB.fotoSemillero.idPublic);
             res.json({
                 ok: true,
                 pet:petDB
@@ -60,10 +64,13 @@ petRouter.delete('/eliminar', (req:Request,res:Response) => {
     }).catch((err: any) => {
         res.json({
             ok: false,
-            msg: "No se pudo borrar la mascota"
+            msg: "No se pudo borrar la mascota",
+            err
         })
-    })
+    });
 });
+
+
 
 //Ver pets
 petRouter.get('/todos',(req: Request,res: Response)=>{

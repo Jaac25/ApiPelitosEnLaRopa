@@ -4,6 +4,7 @@ import {Usuario} from '../modelos/usuario';
 import bcrypt from 'bcryptjs';
 import Token from "../clases/token";
 import { verificarToken } from "../middelwares/autentificacion"; 
+import { CallbackError } from "mongoose";
 
 const usuarioRutas = Router();
 
@@ -84,7 +85,7 @@ usuarioRutas.post('/entrar',(req: Request,res: Response)=>{
 });
 
 //Actualizar Token
-usuarioRutas.post('/actualizar', verificarToken, (req: any, res: Response) => {
+usuarioRutas.put('/actualizar', verificarToken, (req: any, res: Response) => {
     const nombresReq: string = req.body.nombres || req.usuario.nombres;
     const apellidosReq: string = req.body.apellidos || req.usuario.apellidos;
     const documentoReq: string = req.body.documento || req.usuario.documento;
@@ -105,30 +106,48 @@ usuarioRutas.post('/actualizar', verificarToken, (req: any, res: Response) => {
         correo: correoReq,
         password: bcrypt.hashSync(passwordReq,10)
     }
-    Usuario.findByIdAndUpdate(req.usuario._id, usuario, { new: true }, (err, userDB) => {
-        if (err) {
-            return res.json({
+    Usuario.findByIdAndUpdate(req.usuario._id, usuario, { new: true }, (err, userDB:any) => {
+        if(err){
+            res.json({
                 ok: false,
-                mensaje: 'Datos inválidos'
-            });
+                msg: "Error al buscar en actualizarUsuario"
+            })
+        }else{
+            if(userDB.compararContrasena(passwordReq)){
+                Usuario.findByIdAndUpdate({_id: userDB._id}, usuario, (err, userUpdateDB) => {
+                    if(err){        
+                        res.json({
+                            ok: false,
+                            msg: "Error al actualizarUsuario"
+                        })
+                    }
+                    if(!userUpdateDB){
+                        res.json({
+                            ok: false,
+                            msg: "Error al actualizar 2 actualizarUsuario"
+                        })
+                    }else{
+                        const miToken = Token.getToken({
+                            _id: userDB._id,
+                            correo: userDB.correo,
+                            password: userDB.password
+                        });
+                        res.json({
+                            ok: true,
+                            token: miToken
+                        });
+                    }
+                })
+            }else{
+                res.json({
+                    ok: false,
+                    msg: "Contraseña incorrecta"
+                })
+            }
         }
-        if (!userDB) {
-            return res.json({
-                ok: false,
-                mensaje: 'Datos inválidos'
-            });
-        }
-        const miToken = Token.getToken({
-            _id: userDB._id,
-            correo: userDB.correo,
-            password: userDB.password
-        });
-        res.json({
-            ok: true,
-            token: miToken
-        });
-    });
+    })
 });
+
 
 //Obtener usuario
 usuarioRutas.get('/mostrar', verificarToken, (req: any, res: Response) => {
